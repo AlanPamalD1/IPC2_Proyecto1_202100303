@@ -22,4 +22,4 @@ for paciente in pacientes:
     for celda in celdas:
         print("Celda f: %s, c: %s" %(celda.getAttribute("f"),celda.getAttribute("c")))
 
-    print("")    
+    print(" ")    
