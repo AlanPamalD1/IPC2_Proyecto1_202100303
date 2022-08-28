@@ -12,7 +12,7 @@ class Nodo:
         self.arriba = None
         self.abajo = None
 
-class MatrizOrtogonal:
+class Matriz:
     def __init__(self):
         #Creamos el nodo raiz en 0,0
         self.raiz = Nodo()

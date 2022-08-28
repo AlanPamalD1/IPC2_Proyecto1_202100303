@@ -1,6 +1,7 @@
 class Nodo:
-    def __init__(self, dato = None):
-        self.dato = dato
+    def __init__(self, paciente, lista_rejillas):
+        self.paciente = paciente
+        self.lista_rejillas = lista_rejillas
         self.siguiente = None
         self.anterior = None
 
@@ -9,8 +10,8 @@ class ListaDoble:
         self.cabeza = None
         self.cola = None
 
-    def add_nodo_final(self, dato):
-        nuevo_nodo = Nodo(dato)
+    def add_nodo_final(self, paciente, lista_rejillas):
+        nuevo_nodo = Nodo(paciente, lista_rejillas)
 
         #Si lista esta vacia
         if self.cabeza == None:
@@ -24,8 +25,8 @@ class ListaDoble:
             nuevo_nodo.anterior = self.cola
             self.cola = nuevo_nodo
 
-    def add_nodo_inicio(self, dato):
-        nuevo_nodo = Nodo(dato)
+    def add_nodo_inicio(self, paciente, lista_rejillas):
+        nuevo_nodo = Nodo(paciente, lista_rejillas)
 
         #Si lista esta vacia
         if self.cabeza == None:
@@ -46,12 +47,21 @@ class ListaDoble:
         contador = 0
         while nodo_temporal != None:
             contador += 1
-            print("Nodo No. " + str(contador) + " valor:" + str(nodo_temporal.dato))
+            print("Nodo No.%s ,paciente: %s, No. de rejillas: %s " %(str(contador), str(nodo_temporal.paciente), str(len(nodo_temporal.lista_rejillas)) ))
             nodo_temporal = nodo_temporal.siguiente
             
         print("**** Fin Lista *****")
-    
-    def borrarNodo(self, dato):
+        
+    def tamano(self):
+        actual = self.cabeza
+        contador = 0
+        while actual != None:
+            contador = contador + 1
+            actual = actual.obtenerSiguiente()
+
+        return contador
+
+    def borrarNodo(self, paciente):
         #creamos un nodo temporal
         nodoTemporal = Nodo(None)
 
@@ -62,7 +72,7 @@ class ListaDoble:
         while nodoTemporal != None:
 
             #validamos si ese nodo es el que busco
-            if nodoTemporal.dato == dato:
+            if nodoTemporal.paciente == paciente:
 
                 #Si ese nodo es la cabeza
                 if nodoTemporal == self.cabeza:

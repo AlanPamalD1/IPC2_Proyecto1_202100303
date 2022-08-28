@@ -4,7 +4,7 @@ class Paciente:
         self.nombre = nombre
         self.edad = edad
         self.periodos = periodos
-        self.m_rejila = m_rejilla
+        self.m_rejilla = m_rejilla
     
     """def __init__(self):
         self.nombre = ""
@@ -19,7 +19,7 @@ class Paciente:
     def getPeriodos(self):
         return self.periodos
     def getMRejilla(self):
-        return self.m_rejila
+        return self.m_rejilla
     
     def setEdad(self, edad):
         self.edad = edad
@@ -28,8 +28,8 @@ class Paciente:
     def setPeriodos(self, periodos):
         self.periodos = periodos
     def setMRejilla(self, m):
-        self.m_rejila = m
+        self.m_rejilla = m
     
     def imprimir(self):
-        text = "Nombre: %s, Edad: %s, Periodos: %s, M de rejillas: %s" %(self.nombre, self.edad, self.periodos, self.m_rejila)
+        text = "Nombre: %s, Edad: %s, Periodos: %s, Tamaño de rejillas: %s" %(self.nombre, self.edad, self.periodos, self.m_rejilla)
         print(text)
