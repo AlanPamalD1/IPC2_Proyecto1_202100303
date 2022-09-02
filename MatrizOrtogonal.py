@@ -19,6 +19,24 @@ class Matriz:
         self.raiz.posVertical = 0
         self.raiz.posHorizontal = 0
 
+    def filas(self):
+        contador = 0
+        celda = self.raiz
+        while celda != None:
+            contador += 1
+            celda = celda.abajo
+        
+        return contador
+
+    def columnas(self):
+        contador = 0
+        celda = self.raiz
+        while celda != None:
+            contador += 1
+            celda = celda.derecha
+        
+        return contador
+    
     def crearIndiceVertical(self, pos):
         # recorrer todos los nodos de manera vertical
         # creamos un temporal
@@ -175,7 +193,7 @@ class Matriz:
         # indexar/apuntar nodo nuevo en indice vertical
         nuevo = self.insertarVertical(nuevo, indiceHorizontal) 
         nuevo = self.insertarHorizontal(nuevo, indiceVertical)
-        print("Nodo insertado...")
+        
         pass
     
     def recorrerMatriz(self):
@@ -229,7 +247,7 @@ class Matriz:
         id = str(nodo.posVertical)+"_"+str(nodo.posHorizontal)
         grafo.node(id, nodo.dato,group=str(nodo.posHorizontal))
         
-
+    
     def graficarFlechas(self, grafo, nodoE):
         nodo = nodoE
         id = str(nodo.posVertical)+"_"+str(nodo.posHorizontal)

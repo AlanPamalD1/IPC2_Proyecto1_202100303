@@ -11,9 +11,10 @@ if __name__ == '__main__':
 
         print("**************************************")
         print("1. Cargar archivo de pacientes")
-        print("2. Ver progreso de paciente")
-        print("3. Generar XML resultados")
-        print("4. Salir")
+        print("2. Ver pacientes")
+        print("3. Simulación de paciente")
+        print("4. Generar XML resultados")
+        print("5. Salir")
         print("**************************************")
         opcion  = input("Ingrese la opción que desea ejecutar\n")
 
@@ -26,8 +27,10 @@ if __name__ == '__main__':
                 datos = ma.leer_archivo(ruta)
 
                 md.listar_pacientes_entrada(datos)
-
             case "2":
+                print("")
+                md.imprimir_pacientes()
+            case "3":
                 print("")
                 md.imprimir_pacientes()
 
@@ -35,10 +38,10 @@ if __name__ == '__main__':
                 
                 md.iniciarSimulacion(num_paciente)
 
-            case "3":
-                print("")
-                pass
             case "4":
+                print("")
+                
+            case "5":
                 programa_en_curso = False
                 print("Saliendo del programa ...")
             case _:
