@@ -57,7 +57,7 @@ class ListaDoble:
         contador = 0
         while actual != None:
             contador = contador + 1
-            actual = actual.obtenerSiguiente()
+            actual = actual.siguiente
 
         return contador
 

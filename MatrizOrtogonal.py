@@ -247,7 +247,25 @@ class Matriz:
         id = str(nodo.posVertical)+"_"+str(nodo.posHorizontal)
         grafo.node(id, nodo.dato,group=str(nodo.posHorizontal))
         
-    
+    def getCelda(self, fila, columna):
+
+        #iniciamos en el nodo raiz
+        tmpV = self.raiz
+
+        #vamos bajando en vertical
+        while tmpV != None:
+            tmpH = tmpV
+
+            #nos vamos a la derecha 
+            while tmpH != None:
+                if tmpH.posHorizontal == columna and tmpH.posVertical == fila:
+                    return tmpH.dato
+                tmpH = tmpH.derecha
+
+            #se termino una fila
+            tmpV = tmpV.abajo
+                
+
     def graficarFlechas(self, grafo, nodoE):
         nodo = nodoE
         id = str(nodo.posVertical)+"_"+str(nodo.posHorizontal)
