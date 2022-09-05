@@ -1,4 +1,5 @@
 Tarea1.xml
 process.dot
 process.dot.svg
-/__pycache__
+/_pycache_
+__pycache__/

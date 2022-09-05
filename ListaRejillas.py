@@ -14,7 +14,6 @@ class ListaDoble:
 
         #Si lista esta vacia
         if self.cabeza == None:
-            print("Insertando al final")
             self.cabeza = nuevo_nodo
             self.cola = nuevo_nodo
 
@@ -29,7 +28,6 @@ class ListaDoble:
 
         #Si lista esta vacia
         if self.cabeza == None:
-            print("Insertando al inicio")
             self.cabeza = nuevo_nodo
             self.cola = nuevo_nodo
 

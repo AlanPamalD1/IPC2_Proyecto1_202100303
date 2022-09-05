@@ -197,7 +197,7 @@ class Matriz:
         pass
     
     def recorrerMatriz(self):
-        print("Graficando lista...")
+        #print("Graficando lista...")
         
         dot = Digraph('G', filename='dot', engine='dot',format='svg')
         dot.node_attr.update(shape="box")

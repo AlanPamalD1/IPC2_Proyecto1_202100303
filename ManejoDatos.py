@@ -1,4 +1,5 @@
-from Paciente import Paciente
+from ast import Num
+from paciente import Paciente
 from MatrizOrtogonal import Matriz
 from ListaRejillas import ListaDoble as l_rej
 import SuperGlobal as sg
@@ -7,6 +8,7 @@ import SuperGlobal as sg
 def listar_pacientes_entrada (datos):
 
     for paciente in datos:
+        rejilla_valida = True
         lista_rejilla = l_rej()
         matriz = Matriz()
 
@@ -16,12 +18,20 @@ def listar_pacientes_entrada (datos):
         m = int(paciente.getElementsByTagName("m")[0].firstChild.data)
         celdas = paciente.getElementsByTagName("celda")
 
-        datos_paciente = Paciente(nombre, edad, periodos, m)
+        if m > sg.LIMITE_REJILLA or m % 10 != 0:
+            rejilla_valida = False
+            print("No se pudo ingresar al paciente %s con una rejilla de tamaño %s x %s, el limite permitido es %s x %s." %(nombre, m, m, sg.LIMITE_REJILLA,sg.LIMITE_REJILLA))
+        if periodos > sg.LIMITE_PERIODOS :
+            print("No se pudo ingresar al paciente %s con un número de periodos de %s, el limite permitido es %s periodos." %(nombre, periodos, sg.LIMITE_PERIODOS))
+            rejilla_valida = False
 
-        matriz = generar_rejilla(m, celdas)
-        lista_rejilla.add_nodo_final(matriz)
+        if rejilla_valida : 
+            datos_paciente = Paciente(nombre, edad, periodos, m)
 
-        sg.lista_pacientes.add_nodo_final(datos_paciente, lista_rejilla)
+            matriz = generar_rejilla(m, celdas)
+            lista_rejilla.add_nodo_final(matriz)
+
+            sg.lista_pacientes.add_nodo_final(datos_paciente, lista_rejilla)
 
 def generar_rejilla(m, celdas):
 
@@ -67,11 +77,6 @@ def copiar_rejilla(rejilla):
 
 def suma_celdas_contagiadas_contiguas(celda):
     if celda != None and celda.dato == "1":
-        return 1
-    else:
-        return 0
-def suma_celdas_saludables_contiguas(celda):
-    if celda != None and celda.dato == "0":
         return 1
     else:
         return 0
@@ -285,8 +290,24 @@ def get_ultimo_rejilla_ultimo_periodo(lista_rejillas):
     
     return rejillas_temp.rejilla
 
-def verificar_repeticion_rejillas(i):
-    pass
+def verificar_repeticion_rejillas(listado_rejillas, rejilla):
+    rejilla_temp = listado_rejillas.cabeza
+
+    contador_busqueda = 0
+
+    while rejilla_temp.siguiente != None:
+
+        comparacion = comparar_matrices(rejilla_temp.rejilla, rejilla)
+
+
+        if comparacion and rejilla_temp.rejilla != rejilla:
+            return contador_busqueda
+        else:
+            contador_busqueda += 1
+            rejilla_temp = rejilla_temp.siguiente
+
+    return (-1)
+
 
 def get_paciente_n (n):
     el_paciente = sg.lista_pacientes.cabeza
@@ -298,6 +319,25 @@ def get_paciente_n (n):
             return None
         
     return el_paciente
+
+def get_n_celdas_sanas(rejilla):
+
+    contador = 0
+    tmpV = rejilla.raiz
+    
+    while tmpV != None:
+        tmpH = tmpV
+        
+        #nos vamos a la derecha 
+        while tmpH != None:
+            if (tmpH.dato == "0"):
+                contador +=1
+            tmpH = tmpH.derecha
+
+        #se termino una fila
+        tmpV = tmpV.abajo
+    
+    return contador
 
 def get_n_celdas_contagiadas(rejilla):
 
@@ -330,49 +370,87 @@ def iniciar_simulacion_manual(n_paciente):
 
         print("Se inicia simulacion con el paciente %s con %s periodos" %(datos_paciente.nombre, datos_paciente.periodos))
         
-        num_rejilla_repetida = None
+        
         if num_periodos <= el_paciente.paciente.periodos:
 
-            while num_periodos <= datos_paciente.periodos and num_rejilla_repetida != -1:
+            while num_periodos <= datos_paciente.periodos:
                 
                 rejilla = get_ultimo_rejilla_ultimo_periodo(listado_rejillas)
                 num_periodos = listado_rejillas.tamano()-1
 
                 print("\n*********************************************")
                 print("Periodo No. "+ str(num_periodos))
-                
+                print("Número de celdas contagiadas: %s" %(get_n_celdas_contagiadas(rejilla)))
+                print("Número de celdas sanas: %s" %(get_n_celdas_sanas(rejilla)))
+                print("\nGraficando rejilla ...")
                 rejilla.recorrerMatriz()
 
                 #print("id rejilla mostrada: %s" %(id(rejilla)))
-                print("Número de celdas contagiadas: %s" %(get_n_celdas_contagiadas(rejilla)))
-
-                if num_periodos == el_paciente.paciente.periodos:
-                    print("\nSe alcanzó el límite de peridos disponibles\n")
-                    break
-                else:
-                    rejilla_nueva = generar_rejilla_nuevo_periodo(rejilla)
-                    listado_rejillas.add_nodo_final(rejilla_nueva)
-
-                    input_siguiente = input("\n¿Desea ver el siguiente periodo?\nS = si\nN = no\n")
-                    if input_siguiente == "N" or input_siguiente == "n":
-                        break
                 
-            """
-            if (num_rejilla_repetida != -1):
-                datos_paciente.resultado = "mortal"
-                break
-            """
+                patron_repetido = verificar_repeticion_rejillas(listado_rejillas, rejilla)
+                #patron_repetido = -1
+
+                if patron_repetido > 0 :
+                    print("\nSe encontró una repetición del periodo %s con el periodo %s" %(patron_repetido, num_periodos))
+                    n_patron = abs(patron_repetido - num_periodos)
+                    print("Repetición cada %s periodos desde el periodo %s" %(n_patron, patron_repetido))
+
+                    #caso grave si n_patron
+                    #mortal si n_patron = 1
+                    if n_patron == 1:
+                        datos_paciente.resultado = "mortal"
+                    else:
+                        datos_paciente.resultado = "grave"
+                    
+                    datos_paciente.n = num_periodos
+                    datos_paciente.n_1 = n_patron
+
+                    break
+
+                elif patron_repetido == 0 :
+                    print("\nSe encontró una repetición del periodo %s con el periodo inicial" %(num_periodos))
+                    n_patron = abs(patron_repetido - num_periodos)
+                    print("Repetición cada %s periodos desde el periodo %s" %(n_patron, patron_repetido))
+
+                    #caso grave si n_patron
+                    #mortal si n_patron = 1
+                    if n_patron == 1:
+                        datos_paciente.resultado = "mortal"
+                        
+                    else:
+                        datos_paciente.resultado = "grave"
+                    
+                    datos_paciente.n = num_periodos
+                    datos_paciente.n_1 = n_patron
+                    break
+
+                else:
+                    #enfermedad leve, no repitencia de periodos
+                    datos_paciente.resultado = "leve"
+                    datos_paciente.n = None
+                    datos_paciente.n_1 = None
+
+                    if num_periodos == el_paciente.paciente.periodos:
+                        print("\nSe alcanzó el límite de peridos disponibles\n")
+                        break
+                    else:
+                        rejilla_nueva = generar_rejilla_nuevo_periodo(rejilla)
+                        listado_rejillas.add_nodo_final(rejilla_nueva)
+
+                        input_siguiente = input("\n¿Desea ver el siguiente periodo?\nS = si\nN = no\n")
+                        if input_siguiente == "N" or input_siguiente == "n":
+                            break
+                    
+
+            print("\nEl paciente tiene un caso %s" %(datos_paciente.resultado))                            
+            print("\nTerminando simulacion\n")           
+                
         else:
             print("Este paciente ya tiene simulación de sus periodos")
             print("Gráficando ultimo periodo simulado ...")
             rejilla = get_ultimo_rejilla_ultimo_periodo(listado_rejillas)
             rejilla.recorrerMatriz()
-            #print("id rejilla mostrada: %s" %(id(rejilla)))
                     
-            
-            
-            
-        
     else:
         print("Número de paciente no válido")
 
