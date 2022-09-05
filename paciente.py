@@ -6,12 +6,7 @@ class Paciente:
         self.periodos = periodos
         self.m_rejilla = m_rejilla
         self.resultado = None
-    
-    """def __init__(self):
-        self.nombre = ""
-        self.edad = 0
-        self.periodos = 0
-        self.m_rejila = 0"""
+
 
     def getEdad(self):
         return self.edad
