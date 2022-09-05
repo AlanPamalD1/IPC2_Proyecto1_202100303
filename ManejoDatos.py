@@ -65,8 +65,13 @@ def copiar_rejilla(rejilla):
     
     return rejilla_temp
 
-def suma_celdas_contagiadas(celda):
+def suma_celdas_contagiadas_contiguas(celda):
     if celda != None and celda.dato == "1":
+        return 1
+    else:
+        return 0
+def suma_celdas_saludables_contiguas(celda):
+    if celda != None and celda.dato == "0":
         return 1
     else:
         return 0
@@ -87,9 +92,6 @@ def generar_rejilla_nuevo_periodo (rejilla):
         #nos vamos a la derecha 
         while tmpH != None:
             contador_celdas_contagiadas = 0
-            
-
-            #print("rejilla en posicion [%s, %s] con valor de: %s"%(tmpH.posVertical,tmpH.posHorizontal, tmpH.dato))
 
             if (tmpH.posVertical == 0 and tmpH.posHorizontal == 0):
                 #print("eszquina superior izquierda")
@@ -190,28 +192,30 @@ def generar_rejilla_nuevo_periodo (rejilla):
                 celda_7 = tmpH.abajo
                 celda_8 = tmpH.derecha.abajo
 
-            contador_celdas_contagiadas += suma_celdas_contagiadas(celda_1)
-            contador_celdas_contagiadas += suma_celdas_contagiadas(celda_2)
-            contador_celdas_contagiadas += suma_celdas_contagiadas(celda_3)
-            contador_celdas_contagiadas += suma_celdas_contagiadas(celda_4)
-            contador_celdas_contagiadas += suma_celdas_contagiadas(celda_5)
-            contador_celdas_contagiadas += suma_celdas_contagiadas(celda_6)
-            contador_celdas_contagiadas += suma_celdas_contagiadas(celda_7)
-            contador_celdas_contagiadas += suma_celdas_contagiadas(celda_8)
-            
-            
-            
+            contador_celdas_contagiadas += suma_celdas_contagiadas_contiguas(celda_1)
+            contador_celdas_contagiadas += suma_celdas_contagiadas_contiguas(celda_2)
+            contador_celdas_contagiadas += suma_celdas_contagiadas_contiguas(celda_3)
+            contador_celdas_contagiadas += suma_celdas_contagiadas_contiguas(celda_4)
+            contador_celdas_contagiadas += suma_celdas_contagiadas_contiguas(celda_5)
+            contador_celdas_contagiadas += suma_celdas_contagiadas_contiguas(celda_6)
+            contador_celdas_contagiadas += suma_celdas_contagiadas_contiguas(celda_7)
+            contador_celdas_contagiadas += suma_celdas_contagiadas_contiguas(celda_8)
 
-            if contador_celdas_contagiadas >= sg.N_CELDAS_CONTAGIADAS:
+            celda_valida = True
+
+            #Verificar que no sea la primera fila o columna
+            if tmpH_temp.posHorizontal == 0:
+                celda_valida = False
+            if tmpH_temp.posVertical == 0:
+                celda_valida = False
+
+            #Si el contador de celdas contagiadas es mayor o igual a 2 contagia la celda
+            
+            if contador_celdas_contagiadas >= sg.N_CELDAS_CONTAGIADAS and celda_valida:
                 #print("Celda en fila %s columna %s se contagio" %(tmpH.posHorizontal, tmpH.posVertical))
-                celda_valida = True
-                if tmpH_temp.posHorizontal == 0:
-                    celda_valida = False
-                if tmpH_temp.posVertical == 0:
-                    celda_valida = False
-                    
-                if celda_valida:
-                    tmpH_temp.dato = "1"
+                tmpH_temp.dato = "1"
+            elif contador_celdas_contagiadas < sg.N_CELDAS_CONTAGIADAS and celda_valida:
+                tmpH_temp.dato = "0"
             
             #siguiente columna
             tmpH = tmpH.derecha
@@ -295,6 +299,25 @@ def get_paciente_n (n):
         
     return el_paciente
 
+def get_n_celdas_contagiadas(rejilla):
+
+    contador = 0
+    tmpV = rejilla.raiz
+    
+    while tmpV != None:
+        tmpH = tmpV
+        
+        #nos vamos a la derecha 
+        while tmpH != None:
+            if (tmpH.dato == "1"):
+                contador +=1
+            tmpH = tmpH.derecha
+
+        #se termino una fila
+        tmpV = tmpV.abajo
+    
+    return contador
+
 def iniciar_simulacion_manual(n_paciente):
     
     el_paciente = get_paciente_n(n_paciente)
@@ -305,45 +328,46 @@ def iniciar_simulacion_manual(n_paciente):
 
         num_periodos = listado_rejillas.tamano()-1
 
-        #rejilla = get_ultimo_rejilla_ultimo_periodo(listado_rejillas)
-
         print("Se inicia simulacion con el paciente %s con %s periodos" %(datos_paciente.nombre, datos_paciente.periodos))
         
         num_rejilla_repetida = None
         if num_periodos <= el_paciente.paciente.periodos:
 
             while num_periodos <= datos_paciente.periodos and num_rejilla_repetida != -1:
-            
+                
                 rejilla = get_ultimo_rejilla_ultimo_periodo(listado_rejillas)
                 num_periodos = listado_rejillas.tamano()-1
 
                 print("\n*********************************************")
                 print("Periodo No. "+ str(num_periodos))
+                
                 rejilla.recorrerMatriz()
 
-                rejilla_nueva = generar_rejilla_nuevo_periodo(rejilla)
-                print("rejilla nueva generada con id: %s" %(id(rejilla_nueva)))
-                listado_rejillas.add_nodo_final(rejilla_nueva)
+                #print("id rejilla mostrada: %s" %(id(rejilla)))
+                print("Número de celdas contagiadas: %s" %(get_n_celdas_contagiadas(rejilla)))
 
-                #num_rejilla_repetida = verificar_repeticion_rejillas(i)
+                if num_periodos == el_paciente.paciente.periodos:
+                    print("\nSe alcanzó el límite de peridos disponibles\n")
+                    break
+                else:
+                    rejilla_nueva = generar_rejilla_nuevo_periodo(rejilla)
+                    listado_rejillas.add_nodo_final(rejilla_nueva)
 
-                """
-                if (num_rejilla_repetida != -1):
-                    datos_paciente.resultado = "mortal"
-                    break
-                """
-                if num_periodos >= el_paciente.paciente.periodos:
-                    print("Se alcanzó el límite de peridos disponibles")
-                    break
+                    input_siguiente = input("\n¿Desea ver el siguiente periodo?\nS = si\nN = no\n")
+                    if input_siguiente == "N" or input_siguiente == "n":
+                        break
                 
-                input_siguiente = input("\n¿Desea ver el siguiente periodo?\nS = si\nN = no\n")
-                if input_siguiente == "N" or input_siguiente == "n":
-                    break
+            """
+            if (num_rejilla_repetida != -1):
+                datos_paciente.resultado = "mortal"
+                break
+            """
         else:
             print("Este paciente ya tiene simulación de sus periodos")
             print("Gráficando ultimo periodo simulado ...")
             rejilla = get_ultimo_rejilla_ultimo_periodo(listado_rejillas)
             rejilla.recorrerMatriz()
+            #print("id rejilla mostrada: %s" %(id(rejilla)))
                     
             
             
