@@ -1,17 +1,24 @@
 
 import ManejoDatos as md
 import ManejoArchivos as ma
+import os
 
 if __name__ == '__main__':
            
     programa_en_curso = True
 
-    print("")
-    ruta = "E:\Mis Documents\Programacion\Python\IPC2\LAB\proyecto 1\Tarea1.xml"
-    #ruta = input("Ingrese la ruta del documento\n")
-    datos = ma.leer_archivo(ruta)
+    ruta_valida = False
+
+    while not ruta_valida:
+        ruta = input("\nIngrese la ruta del documento\n")
+        if os.path.isfile(ruta):
+            ruta_valida = True
+            datos = ma.leer_archivo(ruta)
+            md.listar_pacientes_entrada(datos)
+        else:
+            print("Ruta no válida")
+            ruta_valida = False
     
-    md.listar_pacientes_entrada(datos)
 
     while programa_en_curso:
 
