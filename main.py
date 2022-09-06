@@ -1,7 +1,6 @@
 
 import ManejoDatos as md
 import ManejoArchivos as ma
-import SuperGlobal as sg
 
 if __name__ == '__main__':
            
@@ -34,19 +33,19 @@ if __name__ == '__main__':
 
                 num_paciente = int(input("Ingresa el número del del paciente que deseas ver la simulación\n"))
                 
-                opcion = input("\nSeleccione un método de simulación\n1. Automática\n2. Manual\n3. Masiva\n")
+                opcion = input("\nSeleccione un método de simulación\n1. Manual\n2. Automática\n3. Masiva\n")
                 match opcion:
                     case "1":
-                        md.simulacion_automática(num_paciente)
-                    case "2":
                         md.simulacion_manual(num_paciente)
+                    case "2":
+                        md.simulacion_automática(num_paciente)
                     case "3":
                         md.simulacion_masiva(num_paciente)
                     case _:
                         print("Opción no válida")
                 
             case "3":
-                print("")
+                ma.generar_xml_salida()
                 
             case "4":
                 programa_en_curso = False

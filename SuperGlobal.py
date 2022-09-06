@@ -18,5 +18,8 @@ VALOR_CONTAGIADO = "1"
 # Valor rejilla sana
 VALOR_SANO = "0"
 
-#Numero de celdas contagiadas que deben estar contiguas a una para ser contagiada
-N_CELDAS_CONTAGIADAS = 3
+#Numero de celdas contagiadas que deben estar contiguas de una contagiada para seguir contagiada
+N_CELDAS_CONTAGIAR_CONTAGIADA = 2
+
+#Numero de celdas contagiadas que deben estar contiguas a sana para ser contagiada
+N_CELDAS_CONTAGIAR_SANA = 3

@@ -148,6 +148,7 @@ def generar_rejilla_nuevo_periodo (rejilla):
         
         #nos vamos a la derecha 
         while tmpH != None:
+            estado_celda = tmpH.dato
             contador_celdas_contagiadas = 0
 
             if (tmpH.posVertical == 0 and tmpH.posHorizontal == 0):
@@ -266,14 +267,21 @@ def generar_rejilla_nuevo_periodo (rejilla):
             if tmpH_temp.posVertical == 0:
                 celda_valida = False
 
-            #Si el contador de celdas contagiadas es mayor o igual a 2 contagia la celda
             
-            if contador_celdas_contagiadas >= sg.N_CELDAS_CONTAGIADAS and celda_valida:
-                #print("Celda en fila %s columna %s se contagio" %(tmpH.posHorizontal, tmpH.posVertical))
-                tmpH_temp.dato = sg.VALOR_CONTAGIADO
-            elif contador_celdas_contagiadas < sg.N_CELDAS_CONTAGIADAS and celda_valida:
-                tmpH_temp.dato = sg.VALOR_SANO
-            
+            if estado_celda == sg.VALOR_SANO :
+                if contador_celdas_contagiadas >= sg.N_CELDAS_CONTAGIAR_SANA and celda_valida:
+                    #print("Celda en fila %s columna %s se contagio" %(tmpH.posHorizontal, tmpH.posVertical))
+                    tmpH_temp.dato = sg.VALOR_CONTAGIADO
+                elif contador_celdas_contagiadas < sg.N_CELDAS_CONTAGIAR_SANA and celda_valida:
+                    tmpH_temp.dato = sg.VALOR_SANO
+
+            elif estado_celda == sg.VALOR_CONTAGIADO:
+                if contador_celdas_contagiadas >= sg.N_CELDAS_CONTAGIAR_CONTAGIADA and celda_valida:
+                    #print("Celda en fila %s columna %s se contagio" %(tmpH.posHorizontal, tmpH.posVertical))
+                    tmpH_temp.dato = sg.VALOR_CONTAGIADO
+                elif contador_celdas_contagiadas < sg.N_CELDAS_CONTAGIAR_CONTAGIADA and celda_valida:
+                    tmpH_temp.dato = sg.VALOR_SANO
+
             #siguiente columna
             tmpH = tmpH.derecha
             tmpH_temp = tmpH_temp.derecha
