@@ -21,6 +21,7 @@
 
 - Python
 - Grahpvix
+- os
 
 
 ## Librerias utilizadas
