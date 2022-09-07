@@ -20,13 +20,14 @@
 ## Lenguajes utilizados
 
 - Python
-- Grahpvix
-- os
 
 
 ## Librerias utilizadas
+
+- Grahpvix
 - minidoom
 - ElementTree
+- os
 
 ## Descripción programa
 

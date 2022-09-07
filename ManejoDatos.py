@@ -417,6 +417,9 @@ def simulacion_automática(n_paciente):
         if num_periodos >0:
             print("Retomando simulación en periodo No %s" %(num_periodos))
 
+        rejilla = get_ultimo_rejilla_ultimo_periodo(listado_rejillas)
+        rejilla.recorrerMatriz()
+
         while num_periodos <= datos_paciente.periodos:
             
             rejilla = get_ultimo_rejilla_ultimo_periodo(listado_rejillas)
@@ -437,7 +440,7 @@ def simulacion_automática(n_paciente):
                 else:
                     rejilla_nueva = generar_rejilla_nuevo_periodo(rejilla)
                     listado_rejillas.add_nodo_final(rejilla_nueva)
-                
+        
         rejilla.recorrerMatriz()
 
         print("\nEl paciente tiene un caso %s" %(datos_paciente.resultado))                            
@@ -524,7 +527,7 @@ def simulacion_masiva(n_paciente):
                 break
             else:
 
-                if num_periodos == el_paciente.paciente.periodos:
+                if num_periodos == sg.LIMITE_PERIODOS:
                     print("\nSe alcanzó el límite de peridos disponibles\n")
                     break
                 else:
