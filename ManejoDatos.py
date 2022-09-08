@@ -269,17 +269,17 @@ def generar_rejilla_nuevo_periodo (rejilla):
 
             
             if estado_celda == sg.VALOR_SANO :
-                if contador_celdas_contagiadas >= sg.N_CELDAS_CONTAGIAR_SANA and celda_valida:
-                    #print("Celda en fila %s columna %s se contagio" %(tmpH.posHorizontal, tmpH.posVertical))
+                if contador_celdas_contagiadas == sg.N_CELDAS_CONTAGIAR_SANA and celda_valida:
                     tmpH_temp.dato = sg.VALOR_CONTAGIADO
-                elif contador_celdas_contagiadas < sg.N_CELDAS_CONTAGIAR_SANA and celda_valida:
+                else:
                     tmpH_temp.dato = sg.VALOR_SANO
 
             elif estado_celda == sg.VALOR_CONTAGIADO:
-                if contador_celdas_contagiadas >= sg.N_CELDAS_CONTAGIAR_CONTAGIADA and celda_valida:
-                    #print("Celda en fila %s columna %s se contagio" %(tmpH.posHorizontal, tmpH.posVertical))
+                if contador_celdas_contagiadas == sg.N_CELDAS_CONTAGIAR_CONTAGIADA_1 and celda_valida:
                     tmpH_temp.dato = sg.VALOR_CONTAGIADO
-                elif contador_celdas_contagiadas < sg.N_CELDAS_CONTAGIAR_CONTAGIADA and celda_valida:
+                elif contador_celdas_contagiadas == sg.N_CELDAS_CONTAGIAR_CONTAGIADA_2 and celda_valida:
+                    tmpH_temp.dato = sg.VALOR_CONTAGIADO
+                else:
                     tmpH_temp.dato = sg.VALOR_SANO
 
             #siguiente columna
